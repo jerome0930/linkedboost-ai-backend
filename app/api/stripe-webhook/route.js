@@ -23,7 +23,9 @@ export async function POST(request) {
       const session = event.data.object;
       if (session.subscription) {
         const subscription = await stripe.subscriptions.retrieve(session.subscription);
-        await syncSubscription(subscription);
+        await syncSubscription(subscription, {
+          firebaseUid: session.client_reference_id || session.metadata?.firebaseUid,
+        });
       }
     } else if ([
       "customer.subscription.created",
