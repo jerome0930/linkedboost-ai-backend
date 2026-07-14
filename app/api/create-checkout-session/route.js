@@ -2,6 +2,7 @@ import { getAccountForUser, getOrCreateStripeCustomer } from "../../../lib/accou
 import { requireUser } from "../../../lib/auth.js";
 import { assertAllowedOrigin, jsonResponse, optionsResponse } from "../../../lib/cors.js";
 import { errorResponse } from "../../../lib/errors.js";
+import { getAppUrl } from "../../../lib/app-url.js";
 import { stripe } from "../../../lib/stripe.js";
 
 export const runtime = "nodejs";
@@ -30,8 +31,8 @@ export async function POST(request) {
     const priceId = interval === "yearly"
       ? process.env.STRIPE_YEARLY_PRICE_ID
       : process.env.STRIPE_MONTHLY_PRICE_ID;
-    const appUrl = process.env.APP_URL?.replace(/\/$/, "");
-    if (!priceId || !appUrl) throw new Error("Stripe pricing or APP_URL is not configured.");
+    if (!priceId) throw new Error("Stripe pricing is not configured.");
+    const appUrl = getAppUrl(request);
 
     const customer = await getOrCreateStripeCustomer(user, ref, data);
     const session = await stripe.checkout.sessions.create({

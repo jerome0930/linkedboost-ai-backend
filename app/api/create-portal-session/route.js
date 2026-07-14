@@ -2,6 +2,7 @@ import { getAccountForUser } from "../../../lib/account.js";
 import { requireUser } from "../../../lib/auth.js";
 import { assertAllowedOrigin, jsonResponse, optionsResponse } from "../../../lib/cors.js";
 import { errorResponse } from "../../../lib/errors.js";
+import { getAppUrl } from "../../../lib/app-url.js";
 import { stripe } from "../../../lib/stripe.js";
 
 export const runtime = "nodejs";
@@ -19,8 +20,7 @@ export async function POST(request) {
       throw error;
     }
 
-    const appUrl = process.env.APP_URL?.replace(/\/$/, "");
-    if (!appUrl) throw new Error("APP_URL is not configured.");
+    const appUrl = getAppUrl(request);
     const session = await stripe.billingPortal.sessions.create({
       customer: data.stripeCustomerId,
       return_url: `${appUrl}/success`,
