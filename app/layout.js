@@ -1,4 +1,14 @@
-export const metadata = { title: "LinkedBoost AI", description: "LinkedBoost AI billing service" };
+import "./globals.css";
+
+export const metadata = {
+  title: "LinkedBoost AI",
+  description: "LinkedBoost AI is a Chrome extension for creating and improving LinkedIn posts.",
+};
+
 export default function RootLayout({ children }) {
-  return <html lang="en"><body style={{ fontFamily: "Arial, sans-serif", margin: 0 }}>{children}</body></html>;
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  );
 }
